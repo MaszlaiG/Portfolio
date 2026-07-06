@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mászlai Gábor — Webfejlesztő</title>
+<meta name="description" content="Szabadúszó webfejlesztő Hajdúszoboszlóról. Gyors, mobilbarát weboldalak HTML, CSS és JavaScript alapon. Első konzultáció ingyenes.">
+<meta name="author" content="Mászlai Gábor">
+<!-- Open Graph (Facebook, LinkedIn megosztás) -->
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="Mászlai Gábor — Webfejlesztő">
+<meta property="og:description" content="Szabadúszó webfejlesztő. Gyors, mobilbarát weboldalak, amik hozzák az érdeklődőket.">
+<meta property="og:image"       content="kepek/og-image.jpg">
+<meta property="og:locale"      content="hu_HU">
+<!-- Twitter/X kártya -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Mászlai Gábor — Webfejlesztő">
+<meta name="twitter:description" content="Szabadúszó webfejlesztő. Gyors, mobilbarát weboldalak, amik hozzák az érdeklődőket.">
+<meta name="twitter:image"       content="kepek/og-image.jpg">
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23FF5614'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='20' font-family='sans-serif' font-weight='900' fill='white'>M</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portfolio_style.css">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<!-- Görgetés-mérőszalag -->
+<div class="scroll-rule" aria-hidden="true"><div class="fill" id="scroll-fill"></div></div>
+<div class="ticks left"  aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="ticks right" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<!-- ================================================
+     NAVIGÁCIÓ
+     ================================================ -->
+<header class="nav" id="site-nav">
+  <div class="wrap nav-inner">
+    <a class="brand" onclick="showView('home')" style="text-decoration:none;cursor:pointer">
+      <span class="pin"></span><span data-field="nev">[A&nbsp;Te&nbsp;Neved]</span>
+    </a>
+    <nav class="nav-links" aria-label="Fő navigáció / Main navigation">
+      <a data-view="home"    onclick="scrollToAnchor('rolam')"  data-i18n="nav.about">Rólam</a>
+      <a data-view="home"    onclick="scrollToAnchor('mit')"    data-i18n="nav.build">Mit építek</a>
+      <a data-view="allwork" onclick="showView('allwork')"      data-i18n="nav.work">Munkáim</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch" role="group" aria-label="Nyelv / Language">
+        <button type="button" data-lang="hu">HU</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button class="nav-cta" onclick="showView('order')" data-i18n="nav.cta">Dolgozzunk együtt</button>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menü" aria-expanded="false" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobil navigációs panel -->
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <nav aria-label="Mobil navigáció">
+    <a onclick="scrollToAnchor('rolam'); toggleMobileNav()" data-i18n="nav.about">Rólam</a>
+    <a onclick="scrollToAnchor('mit'); toggleMobileNav()" data-i18n="nav.build">Mit építek</a>
+    <a onclick="showView('allwork'); toggleMobileNav()" data-i18n="nav.work">Munkáim</a>
+    <a onclick="showView('order'); toggleMobileNav()" data-i18n="nav.cta" class="mobile-nav-cta">Dolgozzunk együtt</a>
+  </nav>
+</div>
+
+<!-- ================================================
+     NÉZET: FŐOLDAL
+     ================================================ -->
+<div class="view active" id="view-home">
+
+  <!-- HERO -->
+  <a id="top"></a>
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge"><span class="dot"></span><span id="badge-text">Szabadúszó webfejlesztő · Debrecen</span></span>
+      <h1 data-i18n-html="hero.h1">Régen <span class="strike">betonból</span> építettem. Ma <span class="swap">weboldalakból.</span></h1>
+      <p class="hero-sub reveal" data-i18n-html="hero.sub">Az építőiparban tanultam meg: minden, ami tartós, <b>jó alapon áll</b>. Ma ezt viszem a webre — gyors, mobilon is hibátlan oldalakat építek, amik hozzák az érdeklődőket.</p>
+      <div class="hero-actions reveal">
+        <button class="btn btn-solid" onclick="scrollToAnchor('munkak')"><span data-i18n="hero.btn1">Nézd meg a munkáimat</span> <span class="arr">→</span></button>
+        <button class="btn btn-ghost" onclick="showView('order')" data-i18n="hero.btn2">Vegyük fel a kapcsolatot</button>
+      </div>
+      <div class="hero-dim reveal">
+        <div class="dim"><span data-i18n="hero.dimL">ÖTLET · 01</span><div class="bar"></div><span data-i18n="hero.dimR">KÉSZ OLDAL · 03</span></div>
+      </div>
+      <div class="scroll-hint reveal" aria-hidden="true"><span class="stem"></span><span data-i18n="hero.scroll">Görgess — épül a terv</span></div>
+    </div>
+  </section>
+
+  <!-- ÉPÍTÉS SZEKVENCIA -->
+  <div class="build-track" id="build-track">
+    <div class="build-stage">
+      <div class="build-head">
+        <div class="eyebrow" data-i18n="build.eyebrow">Így épül egy weboldal</div>
+        <div class="build-pct" aria-hidden="true"><span data-i18n="build.pct">Készültség</span>: <b id="build-pct">0%</b></div>
+      </div>
+      <div class="build-inner">
+        <svg class="build-svg" id="build-svg" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tervrajz, amely görgetésre felépül, majd weboldallá alakul">
+          <g id="g-haz">
+            <path data-draw data-phase="1" class="thin"    d="M60 470 H840" pathLength="1"/>
+            <path data-draw data-phase="1"                 d="M210 470 L210 515 L300 515 L300 470" pathLength="1"/>
+            <path data-draw data-phase="1"                 d="M600 470 L600 515 L690 515 L690 470" pathLength="1"/>
+            <path data-draw data-phase="1" class="thin"    d="M218 515 L240 478 M242 515 L264 478 M266 515 L288 478" pathLength="1"/>
+            <path data-draw data-phase="1" class="thin"    d="M608 515 L630 478 M632 515 L654 478 M656 515 L678 478" pathLength="1"/>
+            <path data-draw data-phase="1" class="dimline" d="M210 555 H690 M210 548 V562 M690 548 V562" pathLength="1"/>
+            <text class="lbl" data-on="1" x="430" y="545">7 400</text>
+            <text class="lbl" data-on="1" x="66"  y="458">±0,00</text>
+            <path data-draw data-phase="2" class="steel"   d="M250 470 V240" pathLength="1"/>
+            <path data-draw data-phase="2" class="steel"   d="M650 470 V240" pathLength="1"/>
+            <path data-draw data-phase="2" class="steel"   d="M250 350 H650" pathLength="1"/>
+            <path data-draw data-phase="2" class="steel"   d="M250 240 H650" pathLength="1"/>
+            <path data-draw data-phase="2" class="steel"   d="M230 240 L450 128 L670 240" pathLength="1"/>
+            <path data-draw data-phase="2" class="thin"    d="M250 470 L650 350 M250 350 L650 240" pathLength="1"/>
+            <text class="lbl" data-on="2" x="455" y="118">+9,60</text>
+          </g>
+          <g id="g-web">
+            <path data-draw data-phase="3" class="hi" d="M300 190 H600 V420 H300 Z" pathLength="1"/>
+            <path data-draw data-phase="3" class="hi" d="M300 225 H600" pathLength="1"/>
+            <circle class="dotui" data-on="3" cx="318" cy="208" r="4"/>
+            <circle class="dotui" data-on="3" cx="334" cy="208" r="4"/>
+            <circle class="dotui" data-on="3" cx="350" cy="208" r="4"/>
+            <path data-draw data-phase="3" class="hi" d="M325 260 H470" pathLength="1"/>
+            <path data-draw data-phase="3" class="hi" d="M325 285 H545" pathLength="1"/>
+            <path data-draw data-phase="3" class="hi" d="M345 312 H505" pathLength="1"/>
+            <path data-draw data-phase="3" class="hi" d="M345 338 H460" pathLength="1"/>
+            <path data-draw data-phase="3" class="hi" d="M325 375 H560" pathLength="1"/>
+            <text class="lbl" data-on="3" x="372" y="213">index.html</text>
+          </g>
+          <text class="lbl" data-on="1" x="736" y="600">M 1:100</text>
+        </svg>
+        <div class="build-caps">
+          <div class="build-cap" data-cap="1">
+            <span class="no" data-i18n="build.c1.no">01 — Alap</span>
+            <h3 data-i18n="build.c1.h3">Minden a tervvel kezdődik</h3>
+            <p data-i18n="build.c1.p">Mielőtt egy sor kód megszületne, felmérem az igényeket és megtervezem a szerkezetet.</p>
+          </div>
+          <div class="build-cap" data-cap="2">
+            <span class="no" data-i18n="build.c2.no">02 — Szerkezet</span>
+            <h3 data-i18n="build.c2.h3">Tiszta, teherbíró váz</h3>
+            <p data-i18n="build.c2.p">Szemantikus HTML és átgondolt CSS: olyan kód, ami évek múlva is karbantartható.</p>
+          </div>
+          <div class="build-cap" data-cap="3">
+            <span class="no" data-i18n="build.c3.no">03 — Felület</span>
+            <h3 data-i18n="build.c3.h3">Ugyanaz a logika, új anyag</h3>
+            <p data-i18n="build.c3.p">A vázra kerül a dizájn, az interakció és a tesztelés — a végén egy működő weboldal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÓLAM -->
+  <section id="rolam">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="eyebrow" data-i18n="about.eyebrow">Rólam</div><h2 data-i18n="about.h2">Stabil alap a vállalkozásodnak</h2></div>
+        <div class="sheet-no">Lap A-01</div>
+      </div>
+      <div class="about-grid">
+        <div>
+          <p class="lead reveal" data-i18n="about.lead">Az építőiparból hoztam a szemléletet: az alap dönt el mindent.</p>
+          <p class="reveal" data-i18n="about.p2">Nálam nincs sablon és nincs mellébeszélés: meghallgatom, mit szeretnél elérni, és arra építek megoldást.</p>
+          <p class="reveal" data-i18n="about.p3">A kész oldalt nem csak átadom: minden eszközön letesztelem, és utána sem hagylak magadra.</p>
+        </div>
+        <div class="about-card reveal">
+          <div class="row"><span data-i18n="about.r.loc">Helyszín</span><span data-field="helyszin">Debrecen, HU</span></div>
+          <div class="row"><span data-i18n="about.r.focus">Fókusz</span><span data-i18n="about.v.focus">Weboldalak, frontend</span></div>
+          <div class="row"><span data-i18n="about.r.coop">Együttműködés</span><span data-i18n="about.v.coop">Online, az egész országból</span></div>
+          <div class="row"><span data-i18n="about.r.reply">Válaszidő</span><span data-i18n="about.v.reply">24 órán belül</span></div>
+          <div class="row"><span data-i18n="about.r.status">Státusz</span><span style="color:var(--hivis-deep)" data-i18n="about.v.status">Projektre nyitva</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- MIT ÉPÍTEK -->
+  <section id="mit">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="eyebrow" data-i18n="svc.eyebrow">Mit építek</div><h2 data-i18n="svc.h2">Amiben segíteni tudok</h2></div>
+        <div class="sheet-no">Lap A-02</div>
+      </div>
+      <div class="svc-grid reveal">
+        <div class="svc">
+          <div class="no">01</div>
+          <h3 data-i18n="svc1.h3">Reszponzív weboldalak</h3>
+          <p data-i18n="svc1.p">Bemutatkozó oldal, landing vagy portfólió, ami telefonon és gépen is hibátlan.</p>
+          <div class="tags"><span>HTML</span><span>CSS</span><span data-i18n="svc1.t3">Reszponzív</span></div>
+        </div>
+        <div class="svc">
+          <div class="no">02</div>
+          <h3 data-i18n="svc2.h3">Frontend fejlesztés</h3>
+          <p data-i18n="svc2.p">Gyors, interaktív felületek tiszta kóddal — olyan oldal, amit az ügyfeleid szívesen használnak.</p>
+          <div class="tags"><span>JavaScript</span><span>UI</span><span data-i18n="svc2.t3">Animáció</span></div>
+        </div>
+        <div class="svc">
+          <div class="no">03</div>
+          <h3 data-i18n="svc3.h3">Tesztelés &amp; minőség</h3>
+          <p data-i18n="svc3.p">Átadás előtt minden oldalt végigtesztelek böngészőkön és telefonokon.</p>
+          <div class="tags"><span data-i18n="svc3.t1">Hibakeresés</span><span>QA</span><span data-i18n="svc3.t3">Stabilitás</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUTÓSZALAG -->
+  <div class="tape" aria-hidden="true">
+    <div class="tape-row" id="tape-row">
+      <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Frontend</span><span>QA</span><span>UI</span><span>Reszponzív · Responsive</span>
+    </div>
+  </div>
+
+  <!-- MUNKÁIM -->
+  <section id="munkak">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="eyebrow" data-i18n="work.eyebrow">Munkáim</div><h2 data-i18n="work.h2">Kiválasztott projektek</h2></div>
+        <div class="sheet-no">Lap A-03</div>
+      </div>
+      <div class="work-grid" id="work-grid">
+        <!-- JS tölti be -->
+      </div>
+      <div class="work-more" id="work-more" style="display:none">
+        <button class="btn btn-ghost" onclick="showView('allwork')">
+          <span data-i18n="work.more">Összes munka megtekintése</span> <span class="arr">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- KAPCSOLAT -->
+  <section id="kapcsolat" class="contact">
+    <div class="wrap">
+      <span class="avail"><span class="dot"></span><span data-i18n="contact.avail">Jelenleg projektre nyitva</span></span>
+      <div class="eyebrow" style="margin-top:18px" data-i18n="contact.eyebrow">Kapcsolat</div>
+      <h2 data-i18n-html="contact.h2">Van egy ötleted?<br>Építsük meg együtt — <a onclick="showView('order')" style="cursor:pointer">írj nekem</a>.</h2>
+      <p class="sub" data-i18n="contact.sub">Új weboldal, ráncfelvarrás vagy egy teljes projekt — írd meg pár mondatban, mire van szükséged.</p>
+      <div class="hero-actions reveal" style="margin-top:28px">
+        <button class="btn btn-solid" onclick="showView('order')" style="background:var(--hivis);color:#fff;font-size:1rem;padding:16px 32px;font-weight:700;box-shadow:0 4px 18px rgba(255,86,20,.35)">
+          <span data-i18n="contact.order">Rendelési űrlap kitöltése</span> <span class="arr">→</span>
+        </button>
+      </div>
+      <div class="links">
+        <a data-link="linkedin"  href="" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a data-link="facebook"  href="" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a data-link="instagram" href="" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a data-link="tiktok"    href="" target="_blank" rel="noopener noreferrer">TikTok</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 <span data-field="nev">Mászlai Gábor</span> — <span data-i18n="footer.role">Webfejlesztő</span></span>
+      <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
+    </div>
+  </footer>
+
+</div><!-- /view-home -->
+
+<!-- ================================================
+     NÉZET: ÖSSZES MUNKA
+     ================================================ -->
+<div class="view" id="view-allwork">
+  <main class="detail">
+    <div class="wrap">
+      <button class="detail-back" onclick="showView('home')" data-i18n="back.home">← Vissza a kezdőlapra</button>
+      <div class="sec-head" style="margin-top:24px">
+        <div><div class="eyebrow" data-i18n="work.eyebrow">Munkáim</div><h2 data-i18n="allwork.h2">Összes munka</h2></div>
+        <div class="sheet-no" id="all-count">Lap A-03</div>
+      </div>
+      <div class="work-grid" id="all-grid">
+        <!-- JS tölti be -->
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>© 2026 <span data-field="nev">Mászlai Gábor</span> — <span data-i18n="footer.role">Webfejlesztő</span></span>
+      <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
+    </div>
+  </footer>
+</div><!-- /view-allwork -->
+
+<!-- ================================================
+     NÉZET: PROJEKT RÉSZLET
+     ================================================ -->
+<div class="view" id="view-project">
+  <main class="detail">
+    <div class="wrap">
+      <div id="proj-detail">
+        <!-- JS tölti be -->
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>© 2026 <span data-field="nev">Mászlai Gábor</span> — <span data-i18n="footer.role">Webfejlesztő</span></span>
+      <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
+    </div>
+  </footer>
+</div><!-- /view-project -->
+
+<!-- ================================================
+     NÉZET: RENDELÉS
+     ================================================ -->
+<div class="view" id="view-order">
+  <section class="order-page">
+    <div class="wrap">
+      <div class="order-box">
+
+        <div>
+          <span class="badge"><span class="dot"></span><span data-i18n="order.badge">Ingyenes konzultáció · 24 órás válasz</span></span>
+          <h1 style="font-family:var(--disp);font-weight:800;font-size:clamp(2rem,6vw,3.6rem);line-height:.97;letter-spacing:-.025em;margin:22px 0 16px" data-i18n-html="order.h1">Indítsuk el <span class="swap">a projektedet.</span></h1>
+          <p style="color:var(--ink-soft);font-size:1.02rem;max-width:52ch;line-height:1.65" data-i18n="order.lead">Töltsd ki az alábbi űrlapot — 24 órán belül visszajelzek egy reális tervvel és árajánlattal.</p>
+        </div>
+
+        <div class="order-info-strip" style="margin-top:28px">
+          <div class="info-item" data-i18n="order.info1">Válasz 24 órán belül</div>
+          <div class="info-item" data-i18n="order.info2">Ingyenes konzultáció</div>
+          <div class="info-item" data-i18n="order.info3">Nincs kötelezettség</div>
+        </div>
+
+        <div class="order-form">
+
+          <!-- Sikeres küldés -->
+          <div class="success-view" id="success-view">
+            <div class="success-icon">✅</div>
+            <h2 style="font-family:var(--disp);font-weight:800;font-size:1.8rem;margin-bottom:10px" data-i18n="order.success.h2">Köszönöm a megkeresést!</h2>
+            <p style="color:var(--ink-soft);font-size:.95rem;max-width:42ch;margin:0 auto;line-height:1.6" data-i18n="order.success.p">Az üzeneted megkaptam. 24 órán belül visszajelzek.</p>
+            <div style="margin-top:30px">
+              <button class="btn btn-ghost" onclick="showView('home')" style="display:inline-flex;align-items:center;gap:8px" data-i18n="order.success.back">← Vissza a kezdőlapra</button>
+            </div>
+          </div>
+
+          <!-- Kitöltendő form -->
+          <div class="form-view" id="form-view">
+
+            <!-- 01 Kapcsolat -->
+            <div class="form-section-label" data-i18n="order.sec1">01 — Kapcsolat</div>
+
+            <div class="client-type-row">
+              <div class="client-type-btn selected" data-value="Magánszemély" onclick="selectClientType(this)">
+                <div class="ct-icon">👤</div>
+                <div class="ct-name" data-i18n="order.ct.personal">Magánszemély</div>
+              </div>
+              <div class="client-type-btn" data-value="Vállalkozó" onclick="selectClientType(this)">
+                <div class="ct-icon">🏢</div>
+                <div class="ct-name" data-i18n="order.ct.business">Vállalkozó</div>
+              </div>
+            </div>
+            <input type="hidden" id="r-client-type" value="Magánszemély">
+
+            <!-- Vállalkozói extra mezők (csak Vállalkozó esetén látható) -->
+            <div id="business-fields" style="display:none">
+              <div class="form-row">
+                <div class="field">
+                  <label for="r-company-name" data-i18n="order.label.companyName">Vállalkozás neve (nem kötelező)</label>
+                  <input type="text" id="r-company-name" placeholder="pl. Kiss Katalin Kft.">
+                </div>
+              </div>
+              <div class="form-row two">
+                <div class="field">
+                  <label for="r-company-type" data-i18n="order.label.companyType">Vállalkozás típusa (nem kötelező)</label>
+                  <select id="r-company-type">
+                    <option value="" data-i18n="order.companyType.unknown">Nem adom meg</option>
+                    <option value="Egyéni vállalkozó" data-i18n="order.companyType.sole">Egyéni vállalkozó</option>
+                    <option value="Bt." data-i18n="order.companyType.bt">Bt.</option>
+                    <option value="Kft." data-i18n="order.companyType.kft">Kft.</option>
+                    <option value="Zrt." data-i18n="order.companyType.zrt">Zrt.</option>
+                    <option value="Nonprofit / Egyesület" data-i18n="order.companyType.nonprofit">Nonprofit / Egyesület</option>
+                    <option value="Egyéb" data-i18n="order.companyType.other">Egyéb</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="r-tax-number" data-i18n="order.label.taxNumber">Adószám (nem kötelező)</label>
+                  <input type="text" id="r-tax-number" placeholder="pl. 12345678-1-23 vagy VAT-szám">
+                  <span class="field-hint" data-i18n="order.hint.taxNumber">Magyar vagy külföldi adószám egyaránt megfelel.</span>
+                </div>
+              </div>
+              <div class="divider-light"></div>
+            </div>
+
+            <div class="form-row two">
+              <div class="field">
+                <label for="r-lastname" data-i18n="order.label.lastname">Vezetéknév *</label>
+                <input type="text" id="r-lastname" placeholder="pl. Kiss" required>
+              </div>
+              <div class="field">
+                <label for="r-firstname" data-i18n="order.label.firstname">Keresztnév *</label>
+                <input type="text" id="r-firstname" placeholder="pl. Katalin" required>
+              </div>
+            </div>
+
+            <div class="form-row two">
+              <div class="field">
+                <label for="r-email">E-mail *</label>
+                <input type="email" id="r-email" placeholder="pl. kiss.katalin@email.hu" required>
+              </div>
+              <div class="field">
+                <label for="r-phone" data-i18n="order.label.phone">Telefonszám (nem kötelező)</label>
+                <input type="tel" id="r-phone" placeholder="pl. +36 30 123 4567">
+              </div>
+            </div>
+
+            <div class="divider-light"></div>
+
+            <!-- 02 Projekt típusa -->
+            <div class="form-section-label" data-i18n="order.sec2">02 — Projekt típusa</div>
+            <div class="type-grid">
+              <div class="type-card selected" data-value="Bemutatkozó oldal" onclick="selectType(this)" data-tooltip-key="order.tooltip.intro" data-tooltip="Cégedről vagy vállalkozásodról szól — szolgáltatások, elérhetőség, rövid bemutatkozás. Az ügyfelek itt tájékozódnak rólad.">
+                <div class="t-icon">🏠</div>
+                <div class="t-name" data-i18n="order.type.intro">Bemutatkozó oldal</div>
+              </div>
+              <div class="type-card" data-value="Landing oldal" onclick="selectType(this)" data-tooltip-key="order.tooltip.landing" data-tooltip="Egyetlen célt szolgál: eladni, feliratkoztatni vagy érdeklődőt szerezni. Nincs menü, nincs elterelés — csak egy cselekvési felhívás.">
+                <div class="t-icon">🎯</div>
+                <div class="t-name" data-i18n="order.type.landing">Landing oldal</div>
+              </div>
+              <div class="type-card" data-value="Portfólió oldal" onclick="selectType(this)" data-tooltip-key="order.tooltip.portfolio" data-tooltip="Munkáidat, projektjeidet mutatja be. Ideális fotósoknak, tervezőknek, alkotóknak — ahol a vizuális anyag hozza az ügyfeleket.">
+                <div class="t-icon">🖼️</div>
+                <div class="t-name" data-i18n="order.type.portfolio">Portfólió</div>
+              </div>
+              <div class="type-card" data-value="Webshop" onclick="selectType(this)" data-tooltip-key="order.tooltip.shop" data-tooltip="Online bolt, ahol a látogatók közvetlenül vásárolhatnak. Termékek, kosár, fizetés — minden egy helyen.">
+                <div class="t-icon">🛒</div>
+                <div class="t-name" data-i18n="order.type.shop">Webshop</div>
+              </div>
+              <div class="type-card" data-value="Karbantartás / frissítés" onclick="selectType(this)" data-tooltip-key="order.tooltip.maint" data-tooltip="Már van weboldalad, de megérett a megújításra? Tartalom frissítés, hibajavítás, sebesség- vagy mobiloptimalizálás.">
+                <div class="t-icon">🔧</div>
+                <div class="t-name" data-i18n="order.type.maint">Karbantartás</div>
+              </div>
+              <div class="type-card" data-value="Egyéb" onclick="selectType(this)" data-tooltip-key="order.tooltip.other" data-tooltip="Valami egyedi projekted van? Írj néhány szót az ötletedről, és megbeszéljük a részleteket.">
+                <div class="t-icon">💬</div>
+                <div class="t-name" data-i18n="order.type.other">Egyéb</div>
+              </div>
+            </div>
+            <input type="hidden" id="r-type" value="Bemutatkozó oldal">
+
+            <div class="divider-light"></div>
+
+            <!-- 03 Részletek -->
+            <div class="form-section-label" data-i18n="order.sec3">03 — Részletek</div>
+            <div class="form-row">
+              <div class="field">
+                <label for="r-topic" data-i18n="order.label.topic">Minek az oldala / mi a téma? *</label>
+                <input type="text" id="r-topic" placeholder="pl. fodrász szalon, személyi edző, étterem…" required>
+              </div>
+            </div>
+            <div class="form-row two">
+              <div class="field">
+                <label for="r-budget" data-i18n="order.label.budget">Tervezett keret (nem kötelező)</label>
+                <select id="r-budget">
+                  <option value=""                    data-i18n="order.budget.unknown">Még nem tudom</option>
+                  <option value="50 000 Ft alatt"     data-i18n="order.budget.1">50 000 Ft alatt</option>
+                  <option value="50 000 – 100 000 Ft" data-i18n="order.budget.2">50 000 – 100 000 Ft</option>
+                  <option value="100 000 – 200 000 Ft"data-i18n="order.budget.3">100 000 – 200 000 Ft</option>
+                  <option value="200 000 Ft felett"   data-i18n="order.budget.4">200 000 Ft felett</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="r-deadline" data-i18n="order.label.deadline">Kívánt határidő (nem kötelező)</label>
+                <input type="date" id="r-deadline">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="r-msg" data-i18n="order.label.msg">Üzenet — mit szeretnél elérni? *</label>
+                <textarea id="r-msg" placeholder="Írd meg pár mondatban: miről szólna az oldal, mi a célod vele, van-e meglévő oldal amit megújítanál…" required></textarea>
+              </div>
+            </div>
+
+            <div id="status-msg" class="status-msg"></div>
+
+            <button class="submit-btn" id="submit-btn" onclick="submitOrder()">
+              <span data-i18n="order.submit">Elküldöm a megkeresést</span>
+              <span class="arr">→</span>
+            </button>
+
+            <p style="font-size:.72rem;color:var(--ink-soft);text-align:center;margin-top:14px;opacity:.7" data-i18n="order.privacy">
+              Az adataidat kizárólag a kapcsolatfelvételhez használom, harmadik félnek nem adom át.
+            </p>
+          </div><!-- /form-view -->
+
+        </div><!-- /order-form -->
+      </div><!-- /order-box -->
+    </div><!-- /wrap -->
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 <span data-field="nev">Mászlai Gábor</span> — <span data-i18n="footer.role">Webfejlesztő</span></span>
+      <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
+    </div>
+  </footer>
+</div><!-- /view-order -->
+
+<script src="portfolio_script.js"></script>
+</body>
+</html>
