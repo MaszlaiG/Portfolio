@@ -6,38 +6,34 @@
 <title>Mászlai Gábor — Webfejlesztő</title>
 <meta name="description" content="Szabadúszó webfejlesztő Hajdúszoboszlóról. Gyors, mobilbarát weboldalak HTML, CSS és JavaScript alapon. Első konzultáció ingyenes.">
 <meta name="author" content="Mászlai Gábor">
-<!-- Open Graph (Facebook, LinkedIn megosztás) -->
+
 <meta property="og:type"        content="website">
 <meta property="og:title"       content="Mászlai Gábor — Webfejlesztő">
 <meta property="og:description" content="Szabadúszó webfejlesztő. Gyors, mobilbarát weboldalak, amik hozzák az érdeklődőket.">
 <meta property="og:image"       content="kepek/og-image.jpg">
 <meta property="og:locale"      content="hu_HU">
-<!-- Twitter/X kártya -->
+
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="Mászlai Gábor — Webfejlesztő">
 <meta name="twitter:description" content="Szabadúszó webfejlesztő. Gyors, mobilbarát weboldalak, amik hozzák az érdeklődőket.">
 <meta name="twitter:image"       content="kepek/og-image.jpg">
-<!-- Favicon -->
+
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23FF5614'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='20' font-family='sans-serif' font-weight='900' fill='white'>M</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<!-- Firebase -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
-<!-- Görgetés-mérőszalag -->
 <div class="scroll-rule" aria-hidden="true"><div class="fill" id="scroll-fill"></div></div>
 <div class="ticks left"  aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div class="ticks right" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
-<!-- ================================================
-     NAVIGÁCIÓ
-     ================================================ -->
 <header class="nav" id="site-nav">
   <div class="wrap nav-inner">
     <a class="brand" onclick="showView('home')" style="text-decoration:none;cursor:pointer">
@@ -61,7 +57,6 @@
   </div>
 </header>
 
-<!-- Mobil navigációs panel -->
 <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
   <nav aria-label="Mobil navigáció">
     <a onclick="scrollToAnchor('rolam'); toggleMobileNav()" data-i18n="nav.about">Rólam</a>
@@ -71,12 +66,8 @@
   </nav>
 </div>
 
-<!-- ================================================
-     NÉZET: FŐOLDAL
-     ================================================ -->
 <div class="view active" id="view-home">
 
-  <!-- HERO -->
   <a id="top"></a>
   <section class="hero">
     <div class="wrap">
@@ -94,7 +85,6 @@
     </div>
   </section>
 
-  <!-- ÉPÍTÉS SZEKVENCIA -->
   <div class="build-track" id="build-track">
     <div class="build-stage">
       <div class="build-head">
@@ -156,7 +146,6 @@
     </div>
   </div>
 
-  <!-- RÓLAM -->
   <section id="rolam">
     <div class="wrap">
       <div class="sec-head">
@@ -182,7 +171,6 @@
 
   <div class="wrap"><div class="divider"></div></div>
 
-  <!-- MIT ÉPÍTEK -->
   <section id="mit">
     <div class="wrap">
       <div class="sec-head">
@@ -212,14 +200,12 @@
     </div>
   </section>
 
-  <!-- FUTÓSZALAG -->
   <div class="tape" aria-hidden="true">
     <div class="tape-row" id="tape-row">
       <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Frontend</span><span>QA</span><span>UI</span><span>Reszponzív · Responsive</span>
     </div>
   </div>
 
-  <!-- MUNKÁIM -->
   <section id="munkak">
     <div class="wrap">
       <div class="sec-head">
@@ -227,7 +213,6 @@
         <div class="sheet-no">Lap A-03</div>
       </div>
       <div class="work-grid" id="work-grid">
-        <!-- JS tölti be -->
       </div>
       <div class="work-more" id="work-more" style="display:none">
         <button class="btn btn-ghost" onclick="showView('allwork')">
@@ -239,7 +224,6 @@
 
   <div class="wrap"><div class="divider"></div></div>
 
-  <!-- KAPCSOLAT -->
   <section id="kapcsolat" class="contact">
     <div class="wrap">
       <span class="avail"><span class="dot"></span><span data-i18n="contact.avail">Jelenleg projektre nyitva</span></span>
@@ -267,11 +251,8 @@
     </div>
   </footer>
 
-</div><!-- /view-home -->
+</div>
 
-<!-- ================================================
-     NÉZET: ÖSSZES MUNKA
-     ================================================ -->
 <div class="view" id="view-allwork">
   <main class="detail">
     <div class="wrap">
@@ -281,7 +262,6 @@
         <div class="sheet-no" id="all-count">Lap A-03</div>
       </div>
       <div class="work-grid" id="all-grid">
-        <!-- JS tölti be -->
       </div>
     </div>
   </main>
@@ -291,16 +271,12 @@
       <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
     </div>
   </footer>
-</div><!-- /view-allwork -->
+</div>
 
-<!-- ================================================
-     NÉZET: PROJEKT RÉSZLET
-     ================================================ -->
 <div class="view" id="view-project">
   <main class="detail">
     <div class="wrap">
       <div id="proj-detail">
-        <!-- JS tölti be -->
       </div>
     </div>
   </main>
@@ -310,11 +286,8 @@
       <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
     </div>
   </footer>
-</div><!-- /view-project -->
+</div>
 
-<!-- ================================================
-     NÉZET: RENDELÉS
-     ================================================ -->
 <div class="view" id="view-order">
   <section class="order-page">
     <div class="wrap">
@@ -334,7 +307,6 @@
 
         <div class="order-form">
 
-          <!-- Sikeres küldés -->
           <div class="success-view" id="success-view">
             <div class="success-icon">✅</div>
             <h2 style="font-family:var(--disp);font-weight:800;font-size:1.8rem;margin-bottom:10px" data-i18n="order.success.h2">Köszönöm a megkeresést!</h2>
@@ -344,10 +316,8 @@
             </div>
           </div>
 
-          <!-- Kitöltendő form -->
           <div class="form-view" id="form-view">
 
-            <!-- 01 Kapcsolat -->
             <div class="form-section-label" data-i18n="order.sec1">01 — Kapcsolat</div>
 
             <div class="client-type-row">
@@ -362,7 +332,6 @@
             </div>
             <input type="hidden" id="r-client-type" value="Magánszemély">
 
-            <!-- Vállalkozói extra mezők (csak Vállalkozó esetén látható) -->
             <div id="business-fields" style="display:none">
               <div class="form-row">
                 <div class="field">
@@ -416,7 +385,6 @@
 
             <div class="divider-light"></div>
 
-            <!-- 02 Projekt típusa -->
             <div class="form-section-label" data-i18n="order.sec2">02 — Projekt típusa</div>
             <div class="type-grid">
               <div class="type-card selected" data-value="Bemutatkozó oldal" onclick="selectType(this)" data-tooltip-key="order.tooltip.intro" data-tooltip="Cégedről vagy vállalkozásodról szól — szolgáltatások, elérhetőség, rövid bemutatkozás. Az ügyfelek itt tájékozódnak rólad.">
@@ -448,7 +416,6 @@
 
             <div class="divider-light"></div>
 
-            <!-- 03 Részletek -->
             <div class="form-section-label" data-i18n="order.sec3">03 — Részletek</div>
             <div class="form-row">
               <div class="field">
@@ -489,11 +456,11 @@
             <p style="font-size:.72rem;color:var(--ink-soft);text-align:center;margin-top:14px;opacity:.7" data-i18n="order.privacy">
               Az adataidat kizárólag a kapcsolatfelvételhez használom, harmadik félnek nem adom át.
             </p>
-          </div><!-- /form-view -->
+          </div>
 
-        </div><!-- /order-form -->
-      </div><!-- /order-box -->
-    </div><!-- /wrap -->
+        </div>
+      </div>
+    </div>
   </section>
 
   <footer>
@@ -502,7 +469,7 @@
       <span data-i18n="footer.tag">Az alapoktól a frontendig</span>
     </div>
   </footer>
-</div><!-- /view-order -->
+</div>
 
 <script src="script.js"></script>
 </body>

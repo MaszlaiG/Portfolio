@@ -1,12 +1,3 @@
-/* =============================================
-   PORTFÓLIÓ — EGYSÉGES SZKRIPT
-   Tartalmazza: adatok, fordítások, SPA router,
-   összes animáció, rendelési logika, lightbox
-   ============================================= */
-
-/* =============================================
-   ADATOK — itt szerkeszd a személyes adatokat
-   ============================================= */
 window.ADATOK_SZOVEG = `
 
 # ---- SZEMÉLYES ADATOK ----
@@ -33,9 +24,6 @@ projekt = Betti barber | 2026 | Elszánt fodrásztanonc szárnyait bontogató we
 
 `;
 
-/* =============================================
-   FORDÍTÁSOK
-   ============================================= */
 const FORD = {
   "nav.about":   { hu: "Rólam",           en: "About" },
   "nav.build":   { hu: "Mit építek",      en: "What I build" },
@@ -128,7 +116,6 @@ const FORD = {
   "count.unit":     { hu: "projekt",               en: "projects" },
   "count.one":      { hu: "projekt",               en: "project" },
 
-  // Rendelési oldal
   "order.nav-cta":        { hu: "Rendelés →",                            en: "Order →" },
   "order.badge":          { hu: "Ingyenes konzultáció · 24 órás válasz", en: "Free consultation · 24-hour reply" },
   "order.h1":             { hu: 'Indítsuk el <span class="swap">a projektedet.</span>', en: 'Let\'s kick off <span class="swap">your project.</span>' },
@@ -201,14 +188,6 @@ const FORD = {
   "order.ref.prefix":     { hu: "Referenciaszám: ",                            en: "Reference number: " },
 };
 
-/* =============================================
-   FIREBASE CONFIG — "StruckWebMentor" projekt
-   ------------------------------------------------------------
-   Ide írja be az űrlap a leadeket (Firestore "portfolio_leads"
-   gyűjtemény, {orderId} dokumentum-ID-vel).
-   Az SWM admin oldal ugyanebből a projektből olvassa ki élőben
-   az új megrendeléseket.
-   ============================================= */
 window.FIREBASE_CONFIG = {
   apiKey: "AIzaSyAL1NZZVZQWoAnMXFrl89DTYYjTJ1Boj-8",
   authDomain: "struckwebmentor.firebaseapp.com",
@@ -219,16 +198,10 @@ window.FIREBASE_CONFIG = {
   measurementId: "G-S4KV5FMN63"
 };
 
-/* =============================================
-   EMAILJS CONFIG
-   ============================================= */
 const EMAILJS_SERVICE_ID  = "service_598rmjv";
 const EMAILJS_TEMPLATE_ID = "template_ep1k324";
 const EMAILJS_PUBLIC_KEY  = "eTf1OffvvcrBwZcAm";
 
-/* =============================================
-   ÁLLAPOT
-   ============================================= */
 let LANG = "hu";
 let DATA = null;
 let fbDb = null;
@@ -236,9 +209,6 @@ let fbReady = false;
 let _lbEl = null;
 const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* =============================================
-   SEGÉDFÜGGVÉNYEK
-   ============================================= */
 function tr(key) {
   const e = FORD[key];
   if (!e) return null;
@@ -306,9 +276,6 @@ function setLink(name, value, buildHref) {
   });
 }
 
-/* =============================================
-   SPA ROUTER
-   ============================================= */
 let _currentView = "home";
 
 function showView(view, extra) {
@@ -319,13 +286,10 @@ function showView(view, extra) {
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 
-  // Aktív nav-link jelölés
   document.querySelectorAll(".nav-links a[data-view]").forEach(a => {
     a.classList.toggle("active-nav", a.dataset.view === view);
   });
 
-  // history — vissza gomb és URL kezelés
-  // Első betöltésnél replaceState (ne duplikáljon), utána pushState
   const stateObj = { view, extra: extra ?? null };
   const hash = view === "home" ? location.pathname : "#" + view + (extra != null ? "/" + extra : "");
   try {
@@ -333,13 +297,11 @@ function showView(view, extra) {
     else                history.pushState(stateObj, "", hash);
   } catch(e) {}
 
-  // Nézet-specifikus inicializálás
   if (view === "home")    renderHome();
   if (view === "allwork") renderAllWork();
   if (view === "project") renderProjectDetail(extra);
   if (view === "order")   renderOrderView();
 
-  // document.title frissítés
   updatePageTitle(view, extra);
 }
 
@@ -359,7 +321,6 @@ function updatePageTitle(view, extra) {
   document.title = titles[view] || titles.home;
 }
 
-/* belső hash-alapú navigáció a #rolam, #mit, #munkak horgonyokhoz */
 function scrollToAnchor(id) {
   showView("home");
   setTimeout(() => {
@@ -368,7 +329,6 @@ function scrollToAnchor(id) {
   }, 60);
 }
 
-/* Mobilos hamburger menü nyitás/zárás */
 function toggleMobileNav() {
   const btn  = document.getElementById("nav-hamburger");
   const menu = document.getElementById("mobile-nav");
@@ -380,7 +340,6 @@ function toggleMobileNav() {
   document.body.style.overflow = isOpen ? "hidden" : "";
 }
 
-/* ESC billentyű zárja a mobilmenüt */
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     const menu = document.getElementById("mobile-nav");
@@ -388,7 +347,6 @@ document.addEventListener("keydown", e => {
   }
 });
 
-/* Vissza/előre gomb kezelés */
 window.addEventListener("popstate", e => {
   if (e.state && e.state.view) {
     _currentView = e.state.view;
@@ -404,9 +362,6 @@ window.addEventListener("popstate", e => {
   }
 });
 
-/* =============================================
-   RENDER — állandó szövegek
-   ============================================= */
 function applyStatic() {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const v = tr(el.getAttribute("data-i18n"));
@@ -446,9 +401,9 @@ function setCommon(d) {
     const k   = a.getAttribute("data-link");
     const url = vals[k] && vals[k].trim();
     if (!url) {
-      a.remove(); // nincs adat — link törlése
+      a.remove();
     } else {
-      a.setAttribute("href", url); // valós URL beállítása
+      a.setAttribute("href", url);
     }
   });
 }
@@ -462,9 +417,6 @@ function render() {
   observeReveals();
 }
 
-/* =============================================
-   NYELV-VÁLTÓ
-   ============================================= */
 function setupLangSwitch() {
   document.querySelectorAll(".lang-switch button[data-lang]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -472,7 +424,6 @@ function setupLangSwitch() {
       if (l === LANG) return;
       setLang(l);
       render();
-      // Az aktuális nézetet újrarendereljük
       showView(_currentView, _lastProjIdx);
     });
   });
@@ -484,14 +435,6 @@ function updateLangUI() {
   });
 }
 
-/* =============================================
-   PROJEKT KÁRTYA HTML
-   A teljes kártya kattintható – a projekt
-   részletoldalra visz (showView).
-   Több kép a KÉP mezőben ; jellel elválasztva
-   (pl. kepek/a.png;kepek/b.png) – a galéria
-   a részletoldalon a képre kattintva nyílik.
-   ============================================= */
 function projektKartya(p, idx) {
   const cim     = pick(p[0]), ev = pick(p[1]), tech = pick(p[3]);
   const kepMezo = (p[5] || "").trim();
@@ -511,7 +454,6 @@ function projektKartya(p, idx) {
     : `<span class="ph">${no}</span>`;
   const thumbClass = hasKep ? "thumb has-img" : "thumb " + thumb;
 
-  /* A teljes kártya gombként viselkedik */
   return `
     <div class="proj reveal" role="button" tabindex="0"
          onclick="showView('project',${idx})"
@@ -544,11 +486,6 @@ function kepHibakezeles(grid) {
 }
 
 
-/* =============================================
-   NÉZETEK TARTALMA
-   ============================================= */
-
-/* --- Főoldal munkák gridje --- */
 function renderHome() {
   if (!DATA || !DATA.projekt.length) return;
   const grid = document.getElementById("work-grid");
@@ -571,7 +508,6 @@ function renderHome() {
   initTilt();
 }
 
-/* --- Összes munka --- */
 function renderAllWork() {
   const grid = document.getElementById("all-grid");
   if (!grid) return;
@@ -587,7 +523,6 @@ function renderAllWork() {
   initTilt();
 }
 
-/* --- Projekt részlet --- */
 let _lastProjIdx = 0;
 
 function renderProjectDetail(idx) {
@@ -610,12 +545,10 @@ function renderProjectDetail(idx) {
   const no        = String(i + 1).padStart(2, "0");
   const thumb     = "t" + ((i % 4) + 1);
 
-  /* Képek listája (; elválasztó) */
   const kepek  = kepMezo ? kepMezo.split(";").map(s => s.trim()).filter(Boolean) : [];
   const borito = kepek[0] || "";
   const hasKep = borito !== "";
 
-  /* Hero */
   const heroClass = hasKep ? "detail-hero has-img" : "detail-hero " + thumb;
   const heroInner = hasKep
     ? `<img src="${esc(borito)}" alt="${esc(cim)}">`
@@ -625,7 +558,6 @@ function renderProjectDetail(idx) {
     ? `onclick="openGallery(${i},0)" style="cursor:zoom-in" title="${galTitle}"`
     : "";
 
-  /* Galériaminiatűrök (csak ha több kép van) */
   const galeriaSav = kepek.length > 1
     ? `<div class="detail-gallery-strip">
         ${kepek.map((k, gi) => `<div class="detail-gallery-thumb${gi === 0 ? " active" : ""}"
@@ -634,7 +566,6 @@ function renderProjectDetail(idx) {
        </div>`
     : "";
 
-  /* Bekezdések */
   const detailSrc = reszletek && reszletek.trim() ? reszletek : leiras;
   const paras = pick(detailSrc).split("//").map(s => s.trim()).filter(Boolean)
     .map(s => `<p>${esc(s)}</p>`).join("");
@@ -672,7 +603,6 @@ function renderProjectDetail(idx) {
     <div class="detail-body">${paras}</div>
     <div class="proj-nav">${prevLink}${nextLink}</div>`;
 
-  /* Hibás kép fallback */
   const heroImg = wrap.querySelector(".detail-hero.has-img img");
   if (heroImg) {
     heroImg.addEventListener("error", () => {
@@ -688,7 +618,6 @@ function renderProjectDetail(idx) {
   }
 }
 
-/* Galéria megnyitása a projekt képeihez */
 function openGallery(projIdx, startImg) {
   if (!DATA || !DATA.projekt[projIdx]) return;
   const kepMezo = (DATA.projekt[projIdx][5] || "").trim();
@@ -698,11 +627,9 @@ function openGallery(projIdx, startImg) {
 }
 
 
-/* --- Rendelési nézet szövegek frissítése --- */
 function renderOrderView() {
   applyStatic();
   translateSelectOptions();
-  // Reseteljük a formot ha sikeres küldés volt
   const sv = document.getElementById("success-view");
   const fv = document.getElementById("form-view");
   if (sv && sv.classList.contains("show")) {
@@ -717,11 +644,6 @@ function renderOrderView() {
   }
 }
 
-/* =============================================
-   LIGHTBOX / GALÉRIA
-   openLightboxGallery(kepek, startIdx) — nyilakkal
-   lapozható, Escape-pel zárható képnézegető.
-   ============================================= */
 let _lbImages = [];
 let _lbIdx    = 0;
 
@@ -731,7 +653,6 @@ function openLightboxGallery(kepek, startIdx) {
   _renderLightbox();
 }
 
-/* Visszafelé kompatibilis egyképes megnyitó */
 function openLightbox(src) {
   openLightboxGallery([src], 0);
 }
@@ -784,9 +705,6 @@ function lbKey(e) {
   if (e.key === "ArrowRight")  _lbStep(1);
 }
 
-/* =============================================
-   REVEAL ANIMÁCIÓ
-   ============================================= */
 let _io;
 function observeReveals() {
   const items = document.querySelectorAll(".reveal:not([data-seen])");
@@ -804,9 +722,6 @@ function observeReveals() {
   items.forEach(el => { el.setAttribute("data-seen", ""); _io.observe(el); });
 }
 
-/* =============================================
-   GÖRGETÉSVEZÉRELT EFFEKTEK
-   ============================================= */
 function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
 
 function initScrollEngine() {
@@ -894,9 +809,6 @@ function updateBuild(b) {
   if (b.pct) b.pct.textContent = Math.round(clamp01(p / 0.9) * 100) + "%";
 }
 
-/* =============================================
-   3D KÁRTYA-DÖNTÉS
-   ============================================= */
 function initTilt() {
   if (REDUCED) return;
   if (!window.matchMedia || !window.matchMedia("(pointer: fine)").matches) return;
@@ -912,9 +824,6 @@ function initTilt() {
   });
 }
 
-/* =============================================
-   RENDELÉSI ÛRL-LAP LOGIKA
-   ============================================= */
 function selectClientType(el) {
   document.querySelectorAll(".client-type-btn").forEach(c => c.classList.remove("selected"));
   el.classList.add("selected");
@@ -966,7 +875,6 @@ async function submitOrder() {
   const budget     = document.getElementById("r-budget").value;
   const deadline   = document.getElementById("r-deadline").value;
   const fullName   = lastname + " " + firstname;
-  // Vállalkozói extra mezők (opcionális)
   const companyName = (document.getElementById("r-company-name") || {value:""}).value.trim();
   const companyType = (document.getElementById("r-company-type") || {value:""}).value;
   const taxNumber   = (document.getElementById("r-tax-number")   || {value:""}).value.trim();
@@ -997,11 +905,9 @@ async function submitOrder() {
   };
 
   try {
-    // 1) Firebase mentés (kritikus — innen olvassa ki az SWM az új megrendeléseket)
     if (!fbReady || !fbDb) throw new Error("Firebase nem elérhető");
     await fbDb.collection("portfolio_leads").doc(orderId).set(lead);
 
-    // 2) EmailJS értesítő küldése nekem (nem kritikus, csak logol hibát)
     try {
       await emailjs.send(
         EMAILJS_SERVICE_ID,
@@ -1027,7 +933,6 @@ async function submitOrder() {
       console.warn("EmailJS hiba (értesítő):", mailErr);
     }
 
-    // 3) EmailJS visszaigazoló küldése a megrendelőnek (nem kritikus)
     try {
       await emailjs.send(
         EMAILJS_SERVICE_ID,
@@ -1048,7 +953,6 @@ async function submitOrder() {
       console.warn("EmailJS hiba (visszaigazoló):", mailErr);
     }
 
-    // 4) Sikeres nézet megjelenítése
     document.getElementById("form-view").classList.add("hide");
     const sv = document.getElementById("success-view");
     sv.classList.add("show");
@@ -1073,11 +977,7 @@ async function submitOrder() {
   }
 }
 
-/* =============================================
-   INDÍTÁS
-   ============================================= */
 document.addEventListener("DOMContentLoaded", () => {
-  // Adatok beolvasása
   try {
     if (typeof window.ADATOK_SZOVEG === "string") DATA = parse(window.ADATOK_SZOVEG);
   } catch(err) {
@@ -1088,13 +988,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupLangSwitch();
   render();
 
-  // Kezdő nézet
   showView("home");
 
-  // Scroll engine
   initScrollEngine();
 
-  // Firebase init
   try {
     if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey && typeof firebase !== "undefined") {
       if (!firebase.apps.length) firebase.initializeApp(window.FIREBASE_CONFIG);
@@ -1103,7 +1000,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   } catch(e) { console.warn("Firebase init hiba:", e); }
 
-  // EmailJS init
   try {
     if (typeof emailjs !== "undefined") {
       emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
